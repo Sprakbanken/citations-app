@@ -1,3 +1,5 @@
 dhlab
 streamlit
 pandas
+spacy
+srsly
