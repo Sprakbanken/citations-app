@@ -1,1 +1,3 @@
 {"label":"CITATION","pattern":[{"ENT_TYPE":"PER","IS_ALPHA":true},{"LOWER":"et","OP":"?"},{"LOWER":"al","OP":"?"},{"TEXT":".","OP":"?"},{"TEXT":"("},{"IS_DIGIT":true,"LENGTH":4},{"IS_PUNCT":true,"OP":"?"},{"IS_DIGIT":true,"LENGTH":4},{"IS_PUNCT":true}]}
+
+{"label":"CITATION","pattern":[{"ORTH":"(","IS_PUNCT":true},{"ENT_TYPE":"PER","IS_ALPHA":true,"OP":"+"},{"OP":"*"},{"IS_DIGIT":true,"LENGTH":4},{"OP":"*"},{"ORTH":")","IS_PUNCT":true}]}
