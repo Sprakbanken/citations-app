@@ -118,3 +118,9 @@ def citation_finder(corpus, yearspan = (1000,2023), get_concs: bool = False):
 
     return match_sorted
 
+if __name__ == "__main__":
+    corpus = dh.Corpus(doctype="digibok", subject = "språkvitenskap", limit = 1000, from_year=1950)
+    concs = citation_finder(corpus, yearspan = (1000,2023), get_concs = True)
+    concs.to_csv('concs.csv')
+    match_sorted = citation_finder(corpus, yearspan = (1000,2023))
+    match_sorted.to_csv('match_sorted.csv')
