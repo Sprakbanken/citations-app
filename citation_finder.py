@@ -46,7 +46,7 @@ def citation_finder(corpus, yearspan = (1000,2023)):
     #### finner alle konkordanser med navn, årstall og potensielt sidetall før sluttparentes (eller semikolon). Navnet kan følges av "et
     #### al." eller "m.fl.".
     
-    regex2 = r'(?:[A-ZÆØÅ](?:[A-ZÆØÅa-zæøå-]+|\s*\.)\s*,?\s*)+(?:\s*(?:et\s*al\.?|m(?:ed|\s*\.?)\s*fl(?:ei?re?|\s*\.?))\s*)?,?\s*\[?\s*\d{4}\s*[a-zæøå]?\s*\.?\s*\]?(?:\s*[,;:/\)\s]\s*(?:[PpSs]\s*\.?)?\[?\s*\d{1,4}\s*[a-zæøå]?\s*\.?\s*\]?(?:\s*[,-]\s*\d{1,4}\s*[a-zæøå]?\s*\.?)?)*\s*[\);]'
+    regex2 = r'(?:[A-ZÆØÅ](?:[A-ZÆØÅa-zæøå-]+|\s*\.)\s*,?\s*)+(?:\s*(?:et\s*al\.?|m(?:ed|\s*\.?)\s*fl(?:ei?re?|\s*\.?))\s*)?,?\s*\[?\s*\d{4}\s*[a-zæøå]?\s*\.?\s*\]?(?:\s*[,-;:/\)\s]\s*(?:[ps]\s*\.?)?\[?\s*\d{1,4}\s*[a-zæøå]?\s*\.?\s*\]?)*\s*[\);]'
     
     concs2['navn i parentes'] = concs2.concordance.apply(lambda x: findone(regex2, x))
     
@@ -76,7 +76,7 @@ def citation_finder(corpus, yearspan = (1000,2023)):
     #### annet. Navnekonstruksjonene kan bestå av flere navn etter hverandre, potensielt skilt av komma eller "og/and/&", eller etterfulgt
     #### av "et al." eller "m.fl.".
     
-    regex4 = r'(?:(?:[A-ZÆØÅ](?:[A-ZÆØÅa-zæøå-]+|\s*\.)\s*,?\s*)+(?:og|and|&)\s*)?(?:[A-ZÆØÅ](?:[A-ZÆØÅa-zæøå-]+|\s*\.)\s*,?\s*)+(?:\s*(?:et\s*al\.?|m(?:ed|\s*\.?)\s*fl(?:ei?re?|\s*\.?))\s*)?\s*\(\s*\d{4}\s+(?:\)|[^-–—)][^)]*?\))'
+    regex4 = r'(?:(?:[A-ZÆØÅ](?:[A-ZÆØÅa-zæøå-]+|\s*\.)\s*,?\s*)+(?:og|and|&)\s*)?(?:[A-ZÆØÅ](?:[A-ZÆØÅa-zæøå-]+|\s*\.)\s*,?\s*)+(?:\s*(?:et\s*al\.?|m(?:ed|\s*\.?)\s*fl(?:ei?re?|\s*\.?))\s*)?\s*\(\s*\d{4}\D[^)]*?\)'
     
     matchu = []
     
@@ -112,3 +112,5 @@ def citation_finder(corpus, yearspan = (1000,2023)):
     match_sorted = match_concat.sort_values(by=0, ignore_index=True)
     
     return match_sorted
+
+    
