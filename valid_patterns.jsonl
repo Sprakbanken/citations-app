@@ -3,3 +3,7 @@
 {"label":"CITATION","pattern":[{"POS":"PROPN","OP":"+"},{"TEXT":{"REGEX":"(&|og|et)","OP":"?"}},{"POS":"PROPN","IS_ALPHA":true,"OP":"+"},{"ORTH":"(","IS_PUNCT":true},{"IS_DIGIT":true,"LENGTH":4},{"ORTH":")","IS_PUNCT":true}]}
 {"label":"CITATION","pattern":[{"ORTH":"(","IS_PUNCT":true},{"POS":"PROPN","OP":"+"},{"OP":"*"},{"IS_DIGIT":true,"LENGTH":4},{"OP":"*"},{"ORTH":")","IS_PUNCT":true}]}
 {"label":"CITATION","pattern":[{"POS":"PROPN","OP":"+"},{"LOWER":"et","OP":"?"},{"LOWER":"al","OP":"?"},{"TEXT":".","OP":"?"},{"LOWER":{"REGEX":"med"},"OP":"?"},{"LOWER":{"REGEX":"flei?re?"},"OP":"?"},{"TEXT":{"REGEX":"m.fl."},"OP":"?"},{"ORTH":"(","IS_PUNCT":true},{"IS_DIGIT":true,"LENGTH":4},{"TEXT":{"REGEX":"[,-;:/)]"},"OP":"?"},{"LIKE_NUM":true,"OP":"?"},{"ORTH":")","IS_PUNCT":true}]}
+
+{"label":"CITATION","pattern":[{"ORTH":{"REGEX":"\\("}},{"POS":"PROPN"},{"ORTH":{"REGEX":"[^)]"},"OP":"*"},{"IS_DIGIT":true,"LENGTH":4},{"ORTH":{"REGEX":"[^)]"},"OP":"*"},{"ORTH":{"REGEX":"\\)"}}]}
+
+{"label":"CITATION","pattern":[{"POS":"PROPN"},{"ORTH":{"REGEX":"[^())]"},"OP":"*"},{"ORTH":{"REGEX":"\\("}},{"ORTH":{"REGEX":"[^())]"},"OP":"*"},{"IS_DIGIT":true,"LENGTH":4},{"ORTH":{"REGEX":"[^)]"},"OP":"*"},{"ORTH":{"REGEX":"\\)"}}]}
