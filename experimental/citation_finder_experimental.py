@@ -16,14 +16,37 @@ import datetime
 #### corpus = dh.Corpus(doctype='digibok', subject=subject, limit=corp_limit, from_year=from_year)
 
 
-    
+def findone(regx, s):
+    res = re.findall(regx, s)
+    try:
+        r = res[0]
+    except:
+        r = "itj no"
+    return r
+
+
+
+def match_and_explode(c, regex):
+    match = []
+
+    for i in c.values:
+        m = re.findall(regex, i[1])
+        if m != []:
+            match.append((i[0], m))
+
+    match_df = pd.DataFrame(match)
+    match_explode = match_df.explode(column=1)
+
+    return match_explode
+
+
+#### Define current year in curr_year
 curr_year = datetime.datetime.today().year
 
 
 def citation_finder(corpus, strictness='moderate', yearspan=(1000,curr_year), conc_limit=4000):
     """Finds citations in text using regular expressions"""
-    
-    
+
     tall = list(range(yearspan[0],yearspan[1]))
 
     tallOR = ' OR '.join([str(x) for x in tall])
@@ -33,9 +56,11 @@ def citation_finder(corpus, strictness='moderate', yearspan=(1000,curr_year), co
     concs = tallconc.frame
     concs.concordance = concs.concordance.apply(lambda x:x.replace('<b>', '').replace('</b>', '').replace('...', ''))
     concs1 = concs[['urn', 'concordance']]
-    
-    
-    
+
+    #### Define regular expressions
+    #### first filtering, finds concordances with year in parentheses
+    regex1 = r'[\(;].*?\D\d{4}\D.*?[\);]'
+
     #### Strict
     regex_s1 = r"(?<=[(;]\s)(?:[A-ZÀ-Ž][A-zÀ-ž-]+\s*(?:,|og|and|&)\s*)*[A-ZÀ-Ž][A-zÀ-ž-]+\s*(?:et\s*al\.|mfl\.)?\s*,?\s*\d{4}(?:\s*[a-zæøå])?(?:\s*[,:]\s*(?:[ps]\s*\.\s*)?\d{1,4}(?:\s*[,–-]\s*\d{1,4})*)?(?=\s[);])"
     regex_s2 = r"(?:[A-ZÀ-Ž][A-zÀ-ž-]+\s*(?:,|og|and|&)\s*)*[A-ZÀ-Ž][A-zÀ-ž-]+\s*(?:et\s*al\.|mfl\.)?\s*\(\s*\d{4}(?:\s*[a-zæøå])?(?:\s*[,:]\s*(?:[ps]\s*\.\s*)?\d{1,4}(?:\s*[,–-]\s*\d{1,4})*)?\s*\)"
@@ -55,63 +80,41 @@ def citation_finder(corpus, strictness='moderate', yearspan=(1000,curr_year), co
 
     #### NOU, StMeld, Prop
     regex_nou = r"(?:(?:NOU|nou)\s*\(?\s*\d{4}\s*:\s*\d{1,4}|(?:St\s*\.?\s*)?Meld\s*\.?\s*(?:St\s*\.?\s*)?(?:nr\s*\.?\s*)?\d{1,3}\s*\(?\s*\d{4}\s*-\s*\d{4}\s*\)?|Prop\s*\.?\s*\d{1,3}\s*[A-ZÆØÅ]\s*\(?\s*\d{4}\s*-\s*\d{4}\s*\)?)(?:\s*[,(]?\s*[PpSs]\s*\.?\s*\d{1,4})?"
-    
-    
-    
-    def findone(regx, s):
-        res = re.findall(regx, s)
-        try:
-            r = res[0]
-        except:
-            r = "itj no"
-        return r
-    
-    
-        
-    def match_and_explode(c, regex):
-        match = []
-    
-        for i in c.values:
-            m = re.findall(regex, i[1])
-            if m != []:
-                match.append((i[0], m))
 
-        match_df = pd.DataFrame(match)
-        match_explode = match_df.explode(column=1)
-    
-        return match_explode
-    
-    
-    
+
+    concs1['parentes'] = concs1.concordance.apply(lambda x: findone(regex1, x))
+    concs2 = concs1[concs1['parentes'] != 'itj no']
+    concs2 = concs2[['urn', 'concordance']]
+
+
     if strictness == 'strict':
-        i_parentes = match_and_explode(concs1, regex_s1)
-        u_parentes = match_and_explode(concs1, regex_s2)
-        
+        i_parentes = match_and_explode(concs2, regex_s1)
+        u_parentes = match_and_explode(concs2, regex_s2)
+
     elif strictness == 'moderate':
-        i_parentes = match_and_explode(concs1, regex_m1)
-        u_parentes = match_and_explode(concs1, regex_m2)
-            
+        i_parentes = match_and_explode(concs2, regex_m1)
+        u_parentes = match_and_explode(concs2, regex_m2)
+
     elif strictness == 'lenient':
-        concs1['parentes'] = concs1.concordance.apply(lambda x: findone(regex_l1, x))
-        concs2 = concs1[concs1['parentes'] != 'itj no']
-        concs2 = concs2[['urn', 'concordance']]
-        
+        concs2['parentes'] = concs2.concordance.apply(lambda x: findone(regex_l1, x))
+        concs_l = concs2[concs2['parentes'] != 'itj no']
+        concs_l = concs_l[['urn', 'concordance']]
+
         i_parentes = match_and_explode(concs_l, regex_l2)
-        u_parentes = match_and_explode(concs1, regex_l3)
-                
+        u_parentes = match_and_explode(concs2, regex_l3)
+    
     elif strictness == 'open':
-        i_parentes = match_and_explode(concs1, regex_o1)
-        u_parentes = match_and_explode(concs1, regex_o2)
-                    
+        i_parentes = match_and_explode(concs2, regex_o1)
+        u_parentes = match_and_explode(concs2, regex_o2)
+        
     else:
         print("Strictness argument is not valid")
-    
-    
-    
+
+
     noustp = match_and_explode(concs1, regex_nou)
-    
+
     match_concat = pd.concat([i_parentes, u_parentes, noustp], axis=0, ignore_index=True)
     match_sorted = match_concat.sort_values(by=0, ignore_index=True)
-    
-    
+
+
     return match_sorted

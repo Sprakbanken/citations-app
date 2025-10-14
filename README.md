@@ -2,6 +2,9 @@
 
 Citation-finder finds in-text citations in a text corpus using regular expressions. The expressions find citations that follow the author name-publication year format of the [APA](https://i.ntnu.no/academic-writing/apa-7), [Harvard](https://i.ntnu.no/academic-writing/harvard) and [Chicago B](https://i.ntnu.no/academic-writing/chicago-b) styles.
 
+### Streamlit app
+For a quick and easy way to use citation-finder, check out the [Streamlit app](https://citations-app-kmztfpltxabnioacmgftse.streamlit.app/)! Search literature by subject to create a corpus and find the in-text citations.
+
 ### How to use
 Citation-finder takes a corpus created with the [dhlab package](https://dhlab.readthedocs.io/en/stable/) from The National Library of Norway.
 
